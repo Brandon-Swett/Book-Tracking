@@ -25,7 +25,7 @@ GENRES = ["fiction", "nonfiction", "action", "adventure", "Art", "architecture",
 
 # Following valued represent the upper and lower bounds of the menu options, designed
 # to be updated as more menu options introduced.
-MENU_UPPER_BOUND = 4
+MENU_UPPER_BOUND = 5
 MENU_LOWER_BOUND = 1
 
 def main():
@@ -159,6 +159,8 @@ def user_selection_to_action(user_selection):
             print("Database has successfully been cleared.")
         else:
             print("Database had not been cleared\n")
+    elif user_selection == 5:
+        load_database()
     else:
         # If code reaches here we know sanitization failed.
         print("Invalid entry. SANITIZATION FAILED")
@@ -172,6 +174,8 @@ def menu():
         * 1: Add a book
         * 2: Update an entry in the database
         * 3: Show all books in the database
+        * 4: Delete all entries from database
+        * 5: Populate database from .csv file
 
     """
 
@@ -184,6 +188,7 @@ def menu():
         print("2: Update an entry in the database\n")
         print("3: Show all books currently stored in the database\n")
         print("4: Clear the database\n")
+        print("5: Populate database from .csv file\n")
 
         # Get the user input, if user inputs anything other than an integer menu() is recalled.
         try:
@@ -234,7 +239,6 @@ def load_database():
                 cursor.execute(query, (line[0], line[1], line[2], line[3],
                                        line[4]))
                 dataBase.commit()
-                print("Done pushing to database")
                 line_count+=1
 
 
