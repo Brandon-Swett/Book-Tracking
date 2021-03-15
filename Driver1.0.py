@@ -5,6 +5,8 @@ Version 1 looks to establish connection to the database and then gather input fr
     Valid user input:
         * Add entry
         * Edit entries
+        * Delete entries
+        * Update CSV file
 
 """
 
@@ -12,7 +14,6 @@ import sqlite3 as sql
 import datetime
 import csv
 
-#ToDo brainstorm new functionality.
 
 # Represents all possible genres a user can input.
 GENRES = ["fiction", "nonfiction", "action", "adventure", "Art", "architecture", "Alternate history",
@@ -34,11 +35,18 @@ def main():
 
     # Getting the user input
     user_selection = menu()
-
     user_selection_to_action(user_selection)
 
-    # Todo update this when finished with the first version of the project.
-    print("Main : Unfinished\n")
+    user_continue = True
+    while user_continue == True:
+        response = str(input("Would you like to do another operation? Enter Y to continue"))
+        response = response.upper()
+        if response == 'Y':
+            # Getting the user input
+            user_selection = menu()
+            user_selection_to_action(user_selection)
+        else:
+            user_continue = False
 
 def connect():
     """ Establising the connection to the databse """
@@ -56,14 +64,14 @@ def add_book():
     """ Need to gather: Title, Author, page_count, Genre and then add entry to database. """
 
     # Only constraints for title is title != ''
-    title = input(print("\nWhat was the title of the book?   "))
+    title = input(print("\nWhat was the title of the book:   "))
     if len(title) <= 0:
-        title = input(print("\nWhat was the title of the book?   "))
+        title = input(print("\nWhat was the title of the book:   "))
 
     # Author must not be an empty string
-    author = input(print("\nWho was the author of this book?   "))
+    author = input(print("\nWho was the author of this book:   "))
     if len(author) <= 0:
-        author = input(print("\nWho was the author of this book?   "))
+        author = input(print("\nWho was the author of this book:   "))
 
     # page_count must be an integer > 0
     page_count = - 1
@@ -105,21 +113,21 @@ def update_entry():
 
     # Here we need to get the title of the book the user wants to update.
     # Only constraints for title is title != ''
-    title = input(print("\nWhat was the title of the book?   "))
+    title = input("\nWhat was the title of the book?   ")
     if len(title) <= 0:
-        title = input(print("\nWhat was the title of the book?   "))
+        title = input("\nWhat was the title of the book?   ")
     # Convert title to lowercase version
     title_lower = title.lower()
 
     # Author must not be an empty string
-    author = input(print("\nWho was the author of this book?   "))
+    author = input("\nWho was the author of this book?   ")
     if len(author) <= 0:
-        author = input(print("\nWho was the author of this book?   "))
+        author = input("\nWho was the author of this book?   ")
     author_lower = author.lower()
 
-    genre = input(print("\nWhat was the genre?   "))
+    genre = input("\nWhat was the genre?   ")
     while not genre in GENRES:
-        genre = input(print("\nWhat was the genre?   "))
+        genre = input("\nWhat was the genre?   ")
     genre_lower = genre.lower()
 
     query = ''' update books set Author = ?, Genre = ? where Title = ? '''
@@ -144,7 +152,7 @@ def user_selection_to_action(user_selection):
     elif user_selection == 3:
         show_all()
     elif user_selection == 4:
-        user_choice = str(input(print("Are you reall sure you wish to clear the dataBase? Enter 'Y' to confirm\n")))
+        user_choice = str(input(print("Are you really sure you wish to clear the dataBase? Enter 'Y' to confirm\n")))
         user_choice = user_choice.upper()
         if user_choice == 'Y':
             clearDatabase()
@@ -179,8 +187,10 @@ def menu():
 
         # Get the user input, if user inputs anything other than an integer menu() is recalled.
         try:
-            user_option = int(input(print("Please enter an integer value representing your choice.\n")))
+            print("Please enter an integer value representing your choice.\n")
+            user_option = int(input())
         except ValueError:
+            user_option = -1
             menu()
         # Sanitize the user input, user_option must be either 1 or 2
         # This loop is determined by two constants defined above
